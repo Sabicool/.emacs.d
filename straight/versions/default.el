@@ -1,0 +1,11 @@
+(("defrepeater.el" . "9c027a2561fe141dcfb79f75fcaee36cd0386ec1")
+ ("emacsmirror-mirror" . "73d68771488284cceb42f70fda551e0a516cb249")
+ ("evil" . "d6cf6680ec52733ea78dc530ed75fadc5171c758")
+ ("general.el" . "a0b17d207badf462311b2eef7c065b884462cb7c")
+ ("gnu-elpa-mirror" . "fcb3cf5ba5f16885f7851885c954222aee6f03ab")
+ ("goto-chg" . "2af612153bc9f5bed135d25abe62f46ddaa9027f")
+ ("melpa" . "704aa5b8132a72770b5a3cf4f81d1dc154709fdf")
+ ("s.el" . "43ba8b563bee3426cead0e6d4ddc09398e1a349d")
+ ("straight.el" . "2d407bccd9378f1d5218f8ba2ae85c6be73fbaf1")
+ ("use-package" . "caa92f1d64fc25480551757d854b4b49981dfa6b"))
+:beta
