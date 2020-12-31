@@ -1,5 +1,16 @@
-auto-save-list
+# -*- mode: gitignore; -*-
+
 straight/build
 straight/links
 straight/repos
 straight/build-cache.el
+
+# Emacs.
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*

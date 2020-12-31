@@ -57,3 +57,32 @@
          evil-want-Y-yank-to-eol t)
 
   (evil-mode))
+
+(use-package evil-collection
+  :after evil
+  :init
+  (evil-collection-init))
+
+(use-package rainbow-delimiters
+  :ghook
+  'prog-mode-hook)
+
+(use-package auctex)
+
+(use-package company
+  :ghook
+  'text-mode-hook
+  'prog-mode-hook)
+
+(use-package yasnippet
+  :init
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package doom-themes
+  :init
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-one t))
