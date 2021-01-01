@@ -36,14 +36,23 @@
     :prefix "SPC"))
 
 (gsetq create-lockfiles nil
+       find-program "C:\\Users\\saabh\\scoop\\shims\\find.exe"
        sentence-end-double-space nil
        show-paren-delay 0
        vc-follow-symlinks t)
 
+(show-paren-mode)
+
+(use-package ivy
+  :init
+  (ivy-mode))
+
+(use-package counsel)
 
 (use-package defrepeater :demand t)
 
 (use-package evil
+  :after ivy
   :init
   (gsetq evil-cross-lines t
          evil-overriding-maps nil
@@ -56,7 +65,20 @@
          evil-want-keybinding nil
          evil-want-Y-yank-to-eol t)
 
-  (evil-mode))
+  (evil-mode)
+  :config
+  (defrepeater #'evil-window-increase-height)
+  (defrepeater #'evil-window-decrease-height)
+  (defrepeater #'evil-window-increase-width)
+  (defrepeater #'evil-window-decrease-width)
+  (general-def
+    [remap evil-window-increase-height] #'evil-window-increase-height-repeat
+    [remap evil-window-decrease-height] #'evil-window-decrease-height-repeat
+    [remap evil-window-increase-width] #'evil-window-increase-width-repeat
+    [remap evil-window-decrease-width] #'evil-window-decrease-width-repeat)
+
+  (general-my/leader
+    "ff" #'counsel-find-file))
 
 (use-package evil-collection
   :after evil
@@ -74,6 +96,10 @@
   'text-mode-hook
   'prog-mode-hook)
 
+(use-package projectile
+  :init
+  (projectile-mode +1))
+
 (use-package yasnippet
   :init
   (yas-global-mode 1))
@@ -86,3 +112,7 @@
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
   (load-theme 'doom-one t))
+
+(use-package which-key
+  :init
+  (which-key-mode))
