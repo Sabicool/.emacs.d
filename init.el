@@ -43,9 +43,17 @@
 
 (show-paren-mode)
 
+(require 'org)
+
 (use-package ivy
   :init
-  (ivy-mode))
+  (ivy-mode)
+  (general-def ivy-minibuffer-map
+    "C-j" #'ivy-next-line
+    "C-k" #'ivy-previous-line
+    "C-l" #'ivy-scroll-down-command
+    "C-h" #'ivy-scroll-up-command)
+  )
 
 (use-package counsel)
 
@@ -77,8 +85,23 @@
     [remap evil-window-increase-width] #'evil-window-increase-width-repeat
     [remap evil-window-decrease-width] #'evil-window-decrease-width-repeat)
 
+  (general-def '(normal visual) 'override
+    "\\" #'evil-switch-to-windows-last-buffer
+    "bs" #'ivy-switch-buffer
+    "C-h" #'evil-window-left
+    "C-j" #'evil-window-down
+    "C-k" #'evil-window-up
+    "C-l" #'evil-window-right
+    "C-/" #'help-command)
+
   (general-my/leader
-    "ff" #'counsel-find-file))
+    "ff" #'counsel-find-file
+    "fj" #'projectile-find-file
+    "fp" #'projectile-switch-project
+    "wv" #'evil-window-vsplit
+    "wh" #'evil-window-split
+    "wc" #'evil-window-delete
+    "bl" #'ibuffer))
 
 (use-package evil-collection
   :after evil
@@ -89,12 +112,27 @@
   :ghook
   'prog-mode-hook)
 
-(use-package auctex)
+(use-package auctex
+  :init
+  (gsetq TeX-auto-save t)
+  (gsetq TeX-parse-self t))
 
 (use-package company
   :ghook
   'text-mode-hook
-  'prog-mode-hook)
+  'prog-mode-hook
+
+  :config
+  ;; Add yasnippet support for all company backends
+  ;; https://github.com/syl20bnr/spacemacs/pull/179
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
+ (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+	backend
+      (append (if (consp backend) backend (list backend))
+	      '(:with company-yasnippet))))
+  (gsetq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
 
 (use-package projectile
   :init
@@ -102,6 +140,8 @@
 
 (use-package yasnippet
   :init
+  (gsetq yas-snippet-dirs
+	 '("~/.emacs.d/snippets/latex-mode/"))
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
@@ -109,10 +149,49 @@
 
 (use-package doom-themes
   :init
-  (setq doom-themes-enable-bold t
+  (gsetq doom-themes-enable-bold t
         doom-themes-enable-italic t)
   (load-theme 'doom-one t))
 
 (use-package which-key
   :init
   (which-key-mode))
+
+(use-package dashboard
+  :init
+  (gsetq dashboard-items '((recents  . 5)
+			   (bookmarks . 5)
+			   (projects . 5)
+			   (agenda . 5))
+	 dashboard-set-file-icons t
+	 dashboard-set-heading-icons t
+	 dashboard-startup-banner 'logo)
+  (dashboard-setup-startup-hook))
+
+(use-package all-the-icons)
+
+(global-visual-line-mode 1); Proper line wrapping
+(global-hl-line-mode 1); Highlight current row
+(gsetq calendar-week-start-day 1); Calender should start on Monday
+
+;(Add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
+; (use-package latex-mode
+;   :straight nil
+;   :init
+;   :config)
+
+(gsetq TeX-PDF-mode t
+       TeX-source-correlate-mode t
+       TeX-source-correlate-method 'synctex
+       TeX-view-program-list
+       '(("Sumatra PDF" ("\"C:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance -invert-colors" (mode-io-correlate " -forward-search %b %n ") " %o"))))
+
+(eval-after-load 'tex
+    '(progn
+       (assq-delete-all 'output-pdf TeX-view-program-selection)
+       (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+
+(server-start)
+
+;(require 'sumatra-forward)
