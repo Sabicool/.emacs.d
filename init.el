@@ -142,7 +142,7 @@
 (use-package yasnippet
   :init
   (gsetq yas-snippet-dirs
-	 '("~/.emacs.d/snippets/latex-mode/"))
+	 '("~/.emacs.d/snippets/"))
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
@@ -285,6 +285,8 @@
     '(progn
        (assq-delete-all 'output-pdf TeX-view-program-selection)
        (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+
+(yas-reload-all)
 
 (server-start)
 
