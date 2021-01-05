@@ -105,7 +105,10 @@
     "wc" #'evil-window-delete
     "bl" #'ibuffer
     "t" #'treemacs
-    "d" #'darkroom-tentative-mode))
+    "dt" #'darkroom-tentative-mode
+    "dm" #'darkroom-mode
+    "n" #'centaur-tabs-forward
+    "p" #'centaur-tabs-backward))
 
 (use-package evil-collection
   :after evil
@@ -152,6 +155,16 @@
   :after yasnippet
   :init 
   (yas-reload-all))
+
+(use-package doom-themes
+  :init
+  (gsetq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  (gsetq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config))
 
 (use-package treemacs
   :ensure t
@@ -210,7 +223,6 @@
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 'always)
-    (treemacs-load-theme "colorful")
     (pcase (cons (not (null (executable-find "git")))
 		 (not (null treemacs-python-executable)))
       (`(t . t)
@@ -239,15 +251,22 @@
   :ensure t
   :config (treemacs-icons-dired-mode))
 
-(use-package doom-themes
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+(use-package centaur-tabs
+  :demand
   :init
-  (gsetq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-dracula t)
-  (doom-themes-visual-bell-config)
-  (gsetq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  (doom-themes-treemacs-config)
-  (doom-themes-org-config))
+  (gsetq centaur-tabs-enable-key-bindings t)
+  :config
+  (centaur-tabs-mode t)
+  (gsetq centaur-tabs-style "bar"
+	 centaur-tabs-set-icons t
+	 centaur-tabs-set-close-button nil
+	 centaur-tabs-set-modified-marker t
+	 centaur-tabs-modified-marker "●")
+  (centaur-tabs-group-by-projectile-project))
 
 (use-package solaire-mode
   :hook (after-init . solaire-global-mode))
@@ -269,17 +288,29 @@
 
 (use-package all-the-icons)
 
-;; (gsetq org-hide-emphasis-markers t)
+(gsetq org-hide-emphasis-markers t)
 (font-lock-add-keywords 'org-mode
 			'(("^ *\\([-]\\) "
 			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-(use-package org-bullets
-  :init
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; (use-package org-bullets
+;; :init
+;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (global-visual-line-mode 1); Proper line wrapping
 (global-hl-line-mode 1); Highlight current row
 (gsetq calendar-week-start-day 1); Calender should start on Monday
+
+;; Ellipsis configuration
+(gsetq org-ellipsis " ▼")
+
+(use-package org-superstar
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+  (gsetq org-superstar-headline-bullets-list '("✱" "✦" "✸" "✿")
+	 org-hide-leading-stars t
+	 org-superstar-remove-leading-stars t
+	 org-hide t))
 
 (custom-theme-set-faces
  'user
@@ -303,15 +334,15 @@
 ;   :init
 ;   :config)
 
-(add-hook 'org-mode-hook (lambda ()
-			   "Beautify Org Checkbox Symbol"
-			   (push '("[ ]" .  "☐") prettify-symbols-alist)
-			   (push '("[X]" . "☑" ) prettify-symbols-alist)
-			   (push '("[-]" . "❍" ) prettify-symbols-alist)
-			   (push '("#+title: "        . "") prettify-symbols-alist)
-			   (push '("#+subtitle: "     . "") prettify-symbols-alist)
-			   (push '("#+author: "       . "- ") prettify-symbols-alist)
-			   (prettify-symbols-mode)))
+; (add-hook 'org-mode-hook (lambda ()
+; 			   "Beautify Org Checkbox Symbol"
+; 			   (push '("[ ]" .  "☐") prettify-symbols-alist)
+; 			   (push '("[X]" . "☑" ) prettify-symbols-alist)
+; 			   (push '("[-]" . "❍" ) prettify-symbols-alist)
+; 			   (push '("#+title: "        . "") prettify-symbols-alist)
+; 			   (push '("#+subtitle: "     . "") prettify-symbols-alist)
+; 			   (push '("#+author: "       . "☛") prettify-symbols-alist)
+; 			   (prettify-symbols-mode)))
 
 (gsetq TeX-PDF-mode t
        TeX-source-correlate-mode t
