@@ -57,6 +57,8 @@
 
 (use-package counsel)
 
+(use-package darkroom)
+
 (use-package defrepeater :demand t)
 
 (use-package evil
@@ -102,7 +104,8 @@
     "wh" #'evil-window-split
     "wc" #'evil-window-delete
     "bl" #'ibuffer
-    "t" #'treemacs))
+    "t" #'treemacs
+    "d" #'darkroom-tentative-mode))
 
 (use-package evil-collection
   :after evil
@@ -146,7 +149,9 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :after yasnippet)
+  :after yasnippet
+  :init 
+  (yas-reload-all))
 
 (use-package treemacs
   :ensure t
@@ -264,9 +269,32 @@
 
 (use-package all-the-icons)
 
+;; (gsetq org-hide-emphasis-markers t)
+(font-lock-add-keywords 'org-mode
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 (global-visual-line-mode 1); Proper line wrapping
 (global-hl-line-mode 1); Highlight current row
 (gsetq calendar-week-start-day 1); Calender should start on Monday
+
+(custom-theme-set-faces
+ 'user
+ '(org-block ((t (:inherit fixed-pitch))))
+ '(org-code ((t (:inherit (shadow fixed-pitch)))))
+ '(org-document-info ((t (:foreground "dark orange"))))
+ '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+ '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+ '(org-link ((t (:foreground "royal blue" :underline t))))
+ '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-property-value ((t (:inherit fixed-pitch))) t)
+ '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+ '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 ;(Add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
 
@@ -274,6 +302,16 @@
 ;   :straight nil
 ;   :init
 ;   :config)
+
+(add-hook 'org-mode-hook (lambda ()
+			   "Beautify Org Checkbox Symbol"
+			   (push '("[ ]" .  "☐") prettify-symbols-alist)
+			   (push '("[X]" . "☑" ) prettify-symbols-alist)
+			   (push '("[-]" . "❍" ) prettify-symbols-alist)
+			   (push '("#+title: "        . "") prettify-symbols-alist)
+			   (push '("#+subtitle: "     . "") prettify-symbols-alist)
+			   (push '("#+author: "       . "- ") prettify-symbols-alist)
+			   (prettify-symbols-mode)))
 
 (gsetq TeX-PDF-mode t
        TeX-source-correlate-mode t
@@ -285,8 +323,6 @@
     '(progn
        (assq-delete-all 'output-pdf TeX-view-program-selection)
        (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
-
-(yas-reload-all)
 
 (server-start)
 
