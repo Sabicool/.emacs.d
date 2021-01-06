@@ -12,3 +12,4 @@
 
 ;; Main monospace font.
 (push '(font . "Iosevka-12") default-frame-alist)
+
