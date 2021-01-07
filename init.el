@@ -257,8 +257,6 @@
 
 (use-package centaur-tabs
   :demand
-  :init
-  (gsetq centaur-tabs-enable-key-bindings t)
   :config
   (centaur-tabs-mode t)
   (gsetq centaur-tabs-style "bar"
