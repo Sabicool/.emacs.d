@@ -121,8 +121,8 @@
 
 (use-package auctex
   :init
-  (gsetq TeX-auto-save t)
-  (gsetq TeX-parse-self t))
+  (gsetq TeX-auto-save t
+	 TeX-parse-self t))
 
 (use-package company
   :ghook
@@ -274,6 +274,7 @@
   (which-key-mode))
 
 (use-package dashboard
+  :ensure t
   :init
   (gsetq dashboard-items '((recents  . 5)
 			   (bookmarks . 5)
@@ -281,15 +282,19 @@
 			   (agenda . 5))
 	 dashboard-set-file-icons t
 	 dashboard-set-heading-icons t
-	 dashboard-startup-banner 'logo)
+	 dashboard-startup-banner 'logo
+	 dashboard-week-agenda t)
   (dashboard-setup-startup-hook))
 
 (use-package all-the-icons)
 
+(straight-use-package '(org :local-repo nil))
+
 (gsetq org-hide-emphasis-markers t)
-(font-lock-add-keywords 'org-mode
-			'(("^ *\\([-]\\) "
-			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+;; (font-lock-add-keywords 'org-mode
+;; 			'(("^ *\\([-]\\) "
+;; 			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;; (use-package org-bullets
 ;; :init
@@ -353,6 +358,5 @@
        (assq-delete-all 'output-pdf TeX-view-program-selection)
        (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
 
+(load (expand-file-name "my-agenda.el" user-emacs-directory)) 
 (server-start)
-
-;(require 'sumatra-forward)
