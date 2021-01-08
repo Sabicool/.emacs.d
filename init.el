@@ -108,7 +108,8 @@
     "dt" #'darkroom-tentative-mode
     "dm" #'darkroom-mode
     "n" #'centaur-tabs-forward
-    "p" #'centaur-tabs-backward))
+    "p" #'centaur-tabs-backward
+    "a" #'org-agenda))
 
 (use-package evil-collection
   :after evil
@@ -304,16 +305,34 @@
 (global-hl-line-mode 1); Highlight current row
 (gsetq calendar-week-start-day 1); Calender should start on Monday
 
+; (set-ligatures! 'org-mode
+;     :alist '(("TODO " . "")
+;              ("NEXT " . "")
+;              ("PROG " . "")
+;              ("WAIT " . "")
+;              ("DONE " . "")
+;              ("FAIL " . "")))
+
 ;; Ellipsis configuration
 (gsetq org-ellipsis " ▼")
 
 (use-package org-superstar
   :init
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-  (gsetq org-superstar-headline-bullets-list '("✱" "✦" "✸" "✿")
-	 org-hide-leading-stars t
-	 org-superstar-remove-leading-stars t
-	 org-hide t))
+  (gsetq  ;org-superstar-headline-bullets-list '("　")
+	  org-superstar-headline-bullets-list '("✱" "✦" "✸" "✿")
+	  org-hide-leading-stars t
+	  org-superstar-remove-leading-stars t
+	  org-hide t
+	 ; org-superstar-special-todo-items t
+	 ; org-superstar-todo-bullet-alist
+	 ; '(("TODO" "☐　")
+	 ;   ("NEXT" "✒　")
+	 ;   ("PROG" "✰　")
+	 ;   ("WAIT" "☕　")
+	 ;   ("FAIL" "✘　")
+	 ;   ("DONE" "✔　"))
+	  ))
 
 (custom-theme-set-faces
  'user
