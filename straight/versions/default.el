@@ -26,7 +26,6 @@
  ("ht.el" . "2850301d19176b8d3bb6cc8d95af6ab7e529bd56")
  ("hydra" . "2d553787aca1aceb3e6927e426200e9bb9f056f1")
  ("melpa" . "704aa5b8132a72770b5a3cf4f81d1dc154709fdf")
- ("org" . "00b4de3294e526f9684c7669f9697b2fe27e13e1")
  ("org-superstar-mode" . "7f83636db215bf5a10edbfdf11d12a132864a914")
  ("page-break-lines" . "34cd91d841e5334c6966e25fbfd971a2dfbcee69")
  ("pfuture" . "d7926de3ba0105a36cfd00811fd6278aea903eef")
