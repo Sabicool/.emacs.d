@@ -123,7 +123,10 @@
 (use-package auctex
   :init
   (gsetq TeX-auto-save t
-	 TeX-parse-self t))
+	 TeX-parse-self t)
+  :config
+  (pdf-sync-minor-mode)
+  (TeX-source-correlate-mode))
 
 (use-package company
   :ghook
@@ -366,16 +369,88 @@
 ; 			   (push '("#+author: "       . "☛") prettify-symbols-alist)
 ; 			   (prettify-symbols-mode)))
 
-(gsetq TeX-PDF-mode t
-       TeX-source-correlate-mode t
-       TeX-source-correlate-method 'synctex
-       TeX-view-program-list
-       '(("Sumatra PDF" ("\"C:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance -invert-colors" (mode-io-correlate " -forward-search %b %n ") " %o"))))
+(use-package org-noter)
 
-(eval-after-load 'tex
-    '(progn
-       (assq-delete-all 'output-pdf TeX-view-program-selection)
-       (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+(use-package org-brain :ensure t
+  :init
+  (gsetq org-brain-path "c:/Users/saabh/OneDrive/areas/Medicine")
+  ;; For Evil users
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+  :config
+  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+  (gsetq org-id-track-globally t)
+  (gsetq org-id-locations-file "~/.emacs.d/.org-id-locations")
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+  (push '("b" "Brain" plain (function org-brain-goto-end)
+          "* %i%?" :empty-lines 1)
+        org-capture-templates)
+  (gsetq org-brain-visualize-default-choices 'all)
+  (gsetq org-brain-title-max-length 12)
+  (gsetq org-brain-include-file-entries nil
+        org-brain-file-entries-use-title nil))
+
+;; Allows you to edit entries directly from org-brain-visualize
+(use-package polymode
+  :config
+  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
+
+(use-package pdf-tools
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (pdf-tools-install)
+  (pdf-tools-enable-minor-modes))
+
+(use-package org-pdfview
+  :config 
+  (add-to-list 'org-file-apps
+	       '("\\.pdf\\'" . (lambda (file link)
+				 (org-pdfview-open link)))))
 
 (load (expand-file-name "my-agenda.el" user-emacs-directory)) 
-(server-start)
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+	  #'TeX-revert-document-buffer)
+
+;; (gsetq TeX-PDF-mode t
+;;        TeX-source-correlate-mode t
+;;        TeX-source-correlate-method 'synctex
+;;        TeX-view-program-list
+;;        '(("Sumatra PDF" ("\"C:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance -invert-colors" (mode-io-correlate " -forward-search %b %n ") " %o"))))
+;; 
+;; (eval-after-load 'tex
+;;     '(progn
+;;        (assq-delete-all 'output-pdf TeX-view-program-selection)
+;;        (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+;; 
+;; (server-start)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(TeX-source-correlate-mode t)
+ '(blink-cursor-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch))))
+ '(org-code ((t (:inherit (shadow fixed-pitch)))))
+ '(org-document-info ((t (:foreground "dark orange"))))
+ '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+ '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+ '(org-link ((t (:foreground "royal blue" :underline t))))
+ '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-property-value ((t (:inherit fixed-pitch))) t)
+ '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+ '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
