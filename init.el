@@ -109,7 +109,11 @@
     "dm" #'darkroom-mode
     "n" #'centaur-tabs-forward
     "p" #'centaur-tabs-backward
-    "a" #'org-agenda))
+    "a" #'org-agenda
+    "on" #'org-noter-insert-note
+    "op" #'org-noter-insert-precise-note
+    "j" #'move-line-down
+    "k" #'move-line-up))
 
 (use-package evil-collection
   :after evil
@@ -454,3 +458,18 @@
  '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
  '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
