@@ -373,26 +373,39 @@
 ; 			   (push '("#+author: "       . "☛") prettify-symbols-alist)
 ; 			   (prettify-symbols-mode)))
 
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "c:/Users/saabh/OneDrive/org-roam")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
 (use-package org-noter)
 
-(use-package org-brain :ensure t
-  :init
-  (gsetq org-brain-path "c:/Users/saabh/OneDrive/areas/Medicine")
-  ;; For Evil users
-  (with-eval-after-load 'evil
-    (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
-  :config
-  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
-  (gsetq org-id-track-globally t)
-  (gsetq org-id-locations-file "~/.emacs.d/.org-id-locations")
-  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
-  (push '("b" "Brain" plain (function org-brain-goto-end)
-          "* %i%?" :empty-lines 1)
-        org-capture-templates)
-  (gsetq org-brain-visualize-default-choices 'all)
-  (gsetq org-brain-title-max-length 12)
-  (gsetq org-brain-include-file-entries nil
-        org-brain-file-entries-use-title nil))
+; (use-package org-brain :ensure t
+;   :init
+;   (gsetq org-brain-path "c:/Users/saabh/OneDrive/areas/Medicine")
+;   ;; For Evil users
+;   (with-eval-after-load 'evil
+;     (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+;   :config
+;   (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+;   (gsetq org-id-track-globally t)
+;   (gsetq org-id-locations-file "~/.emacs.d/.org-id-locations")
+;   (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+;   (push '("b" "Brain" plain (function org-brain-goto-end)
+;           "* %i%?" :empty-lines 1)
+;         org-capture-templates)
+;   (gsetq org-brain-visualize-default-choices 'all)
+;   (gsetq org-brain-title-max-length 12)
+;   (gsetq org-brain-include-file-entries nil
+;         org-brain-file-entries-use-title nil))
 
 ;; Allows you to edit entries directly from org-brain-visualize
 (use-package polymode
